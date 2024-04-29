@@ -11,7 +11,7 @@ const scenes = [
     },
     { 
         name: "Scene 2", 
-        content: "Detailed view of Chelsea: Examine how restrictive zoning limits educational opportunities.",
+        content: "Detailed view of Chelsea: Restrictive zoning limits educational opportunities.",
         additionalInfo: "In this scene, you'll explore the impact of restrictive zoning on educational opportunities in Chelsea. Learn about the challenges and opportunities for education in this municipality.",
         zoom: 13, 
         center: [-71.0105, 42.3907], 
@@ -20,14 +20,14 @@ const scenes = [
     { 
         name: "Scene 3", 
         content: "Observing Cambridge and Brookline: Seeing the benefits of progressive zoning reforms on local schools.",
-        additionalInfo: "This scene highlights the benefits of progressive zoning reforms on local schools in Somerville. Discover how zoning policies can positively impact education.",
+        additionalInfo: "This scene highlights the benefits of progressive zoning reforms on local schools in Somerville.",
         zoom: 12.5, 
         center: [-71.0935, 42.3607], 
         clickable: false 
     },
     { 
         name: "Map View", 
-        content: "Interactive Map: Click on any municipality to learn more about its zoning impact on education.",
+        content: "Dive Deeper: Click on Any Municipality",
         additionalInfo: "This interactive map allows you to explore the zoning impact on education in Greater Boston municipalities. Click on a municipality to delve deeper into specific data and comparisons.",
         zoom: 9, 
         center: [-71.0589, 42.3601], 
