@@ -29,7 +29,7 @@ const scenes = [
         name: "Map View", 
         content: "Interactive Map: Click on any municipality to learn more about its zoning impact on education.",
         additionalInfo: "This interactive map allows you to explore the zoning impact on education in Greater Boston municipalities. Click on a municipality to delve deeper into specific data and comparisons.",
-        zoom: 15, 
+        zoom: 9, 
         center: [-71.0589, 42.3601], 
         clickable: true 
     }
