@@ -42,9 +42,12 @@ body {
 #navigation {
     position: absolute;
     bottom: 20px;
-    width: calc(100% - 40px); 
+    left: 0;  /* Ensure it starts from the left edge of its container */
+    right: 0; /* Ensure it extends to the right edge of its container */
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between; /* This will space out the buttons evenly */
+    padding: 0 20px; /* Add horizontal padding */
+    box-sizing: border-box; /* Ensures padding is included in width calculation */
 }
 
 button {
@@ -92,25 +95,30 @@ filter: drop-shadow(0 0 8px rgba(255, 0, 242, 0.9));
 }
 
 /* Media Query for Mobile Devices */
+/* Media Query for Mobile Devices */
 @media (max-width: 768px) {
     #info-bar {
+        opacity: 0.9;
+        overflow: visible;
         width: 100%; /* Full width for smaller screens */
-        right: 0; /* Align right side to viewport */
         top: 0; /* Align top side to viewport */
-        height: auto; /* Adjust height to content */
-        padding: 10px; /* Reduce padding */
+        right: 0; /* Align right side to viewport */
+        height: 450px; /* Adjust height to content */
+        padding: 10px; /* Slightly reduced padding */
+        font-size: 10px; /* Smaller font size for better readability */
     }
 
     #chart {
-        height: 200px; /* Reduce chart height for smaller screens */
+        transform: scale(0.6); /* Scales down the chart to 70% of its original size */
+        transform-origin: top center;  /* Sets the point from which the scaling occurs */
+        width: 100%; /* Maintains full width in terms of scaling context */
+        height: 300px; /* Adjusts the height to the new scaled size to prevent extra space */
+        margin-top: 10px; /* Adjust margin to fit mobile layout better */
     }
 
     #navigation {
-        width: calc(100% - 20px); /* Adjust width to accommodate reduced padding */
-    }
-
-    #municipality-name {
-        font-size: 16px; /* Smaller font size for smaller screens */
+        width: 100%; /* Adjust width to accommodate reduced padding */
+        padding: 0 10px; /* Adjusted padding for mobile */
     }
 
     button {
@@ -118,8 +126,15 @@ filter: drop-shadow(0 0 8px rgba(255, 0, 242, 0.9));
         height: 30px; /* Reduce button size for smaller screens */
     }
 
+    #municipality-name {
+        font-size: 14px; /* Smaller font size for smaller screens */
+        margin-bottom: 15px; /* Reduced bottom margin */
+    }
+
     #legend {
-        padding: 10px; /* Reduce padding in the legend for smaller screens */
-        font-size: 10px; /* Reduce font size for legend text */
+        padding: 8px; /* Reduce padding in the legend for smaller screens */
+        font-size: 9px; /* Reduce font size for legend text */
+        bottom: 20px;
+     /* Hide the legend on mobile devices */
     }
 }
