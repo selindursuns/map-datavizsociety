@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Interactive Map with Styled Info Bar</title>
+<meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+<link rel="stylesheet" href="styles.css">
+<link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+<script src="https://d3js.org/d3.v7.min.js"></script> 
+</head>
+<body>
+<div id="map"></div>
+<div id="info-bar">
+    <div id="municipality-name">Explore the broad impact of zoning on education quality across Greater Boston.</div>
+    <div id="additional-info"></div>
+    <svg id="chart">
+        <defs>
+            <filter id="glow">
+                <feGaussianBlur stdDeviation="2.5" result="coloredBlur"/>
+                <feMerge>
+                    <feMergeNode in="coloredBlur"/>
+                    <feMergeNode in="SourceGraphic"/>
+                </feMerge>
+            </filter>
+        </defs>
+
+    </svg>
+
+    <div id="legend" style="padding: 30px;">
+        <h4>Legend:</h4>
+        <div>
+            <svg width="20" height="20" class="glow1">
+                <circle cx="10" cy="10" r="8" style="fill: #FF69B4;"></circle> <!-- Neon pink color -->
+            </svg>
+            <span>Poor Education Quality </span>
+        </div>
+        <div>
+            <svg width="20" height="20" class="glow2">
+                <circle cx="10" cy="10" r="8" style="fill: blue;"></circle>
+            </svg>
+            <span>Good Education Quality </span>
+        </div>
+    </div>
+    <div id="navigation">
+        <button id="previous-scene" onclick="goToPreviousScene()" style="visibility: hidden;">
+            <img src="left-arrow.png" alt="Previous" style="width: 40px; height: 40px;">
+        </button>
+        <button id="next-scene" onclick="goToNextScene()" style="visibility: visible;">
+            <img src="right-arrow.png" alt="Next" style="width: 40px; height: 40px;">
+        </button>
+    </div>
+</div>
+
+
+
+
+
+
+<script>
+mapboxgl.accessToken = 'pk.eyJ1Ijoic2VsaW5kdXJzdW5uIiwiYSI6ImNsdmpucnN6YjFrYWYycm41cGxrNjNsNDMifQ.8ZNsKjRpCDRNEjV5AI4wRg'; 
+const map = new mapboxgl.Map({
+    container: 'map',
+    style: 'mapbox://styles/selindursunn/clvjpb4wz069501pkdvkhb2i7', 
+    center: [-71.0589, 42.3601], 
+    zoom: 12, 
+
+
+});
+
+function calculateAverageScores(dataset) {
+    return {
+        education: d3.mean(dataset, (d) => d.z_score_education),
+        health: d3.mean(dataset, (d) => d.z_score_health),
+        social: d3.mean(dataset, (d) => d.z_score_social),
+    };
+}
+
+const multiplier = 10; 
+
+function updateChart(dataset, municipalityName) {
+    const municipality = dataset.find((d) => d.muni === municipalityName);
+
+    if (!municipality) {
+        console.error("Municipality not found in the dataset");
+        return;
+    }
+
+    const averageScores = calculateAverageScores(dataset);
+
+    const data = [
+        { attribute: "Education", value: multiplier * municipality.z_score_education, type: "Selected" },
+        { attribute: "Education", value: multiplier * averageScores.education, type: "Average" },
+        { attribute: "Health", value: multiplier * municipality.z_score_health, type: "Selected" },
+        { attribute: "Health", value: multiplier * averageScores.health, type: "Average" },
+        { attribute: "Social", value: multiplier * municipality.z_score_social, type: "Selected" },
+        { attribute: "Social", value: multiplier * averageScores.social, type: "Average" },
+    ];
+
+    d3.select("#chart").selectAll("*").remove();
+
+    const margin = { top: 20, right: 30, bottom: 30, left: 50 };
+    const width = 500 - margin.left - margin.right;
+    const height = 350 - margin.top - margin.bottom;
+
+    const svg = d3.select("#chart")
+    .append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom);
+
+    const x = d3.scaleBand()
+    .domain(["Education", "Health", "Social"])
+    .range([margin.left, width])
+    .padding(0.1);
+
+    const y = d3.scaleLinear()
+        .domain([0, Math.max(1, d3.max(data, (d) => d.value))]) 
+        .range([height, margin.top]);
+
+    const colorScale = d3.scaleOrdinal()
+        .domain(["Selected", "Average"])
+        .range(["orange", "steelblue"]);
+
+    svg.selectAll("rect")
+    .data(data)
+    .enter()
+    .append("rect")
+    .attr("x", (d) => x(d.attribute) + (d.type === "Selected" ? 0 : x.bandwidth() / 2))
+    .attr("y", (d) => d.value < 0 ? y(0) : y(d.value))
+    .attr("width", x.bandwidth() / 2)
+    .attr("height", (d) => {
+        if (d.value < 0) {
+            return Math.abs(y(0) - y(d.value));
+        } else {
+            return height - y(d.value);
+        }
+    })
+    .attr("fill", (d) => colorScale(d.type))
+    .attr("rx", 8) // Set the x-axis corner radius
+    .attr("ry", 5);
+
+    svg.append("g")
+        .attr("transform", `translate(0, ${height})`)
+        .call(d3.axisBottom(x));
+
+    svg.append("g")
+        .attr("transform", `translate(${margin.left}, 0)`)
+        .call(d3.axisLeft(y));
+
+        svg.append("text")
+        .attr("text-anchor", "end")
+        .attr("x", 4)
+        .attr("x", width + margin.left + 10)
+        .attr("dx", ".45em")
+        .attr("y", height + margin.top + 10)
+        .text("Attributes")
+        .attr("fill", "white");
+
+
+    // Y-axis label
+        svg.append("text")
+        .attr("text-anchor", "end")
+        .attr("transform", "rotate(-90)")
+        .attr("y", 4)
+        .attr("dy", ".75em")
+        .attr("x", -margin.top)
+        .text("Z Score")
+        .attr("fill", "white");
+
+    const legend = svg.append("g")
+        .attr("transform", `translate(${margin.left + 10}, ${margin.top - 15})`);
+
+    legend.append("rect")
+        .attr("width", 15)
+        .attr("height", 15)
+        .attr("fill", "orange")
+        .attr("y", 0);
+
+    legend.append("text")
+        .attr("x", 20)
+        .attr("y", 15)
+        .text("Selected")
+        .attr("fill", "orange");
+
+    legend.append("rect")
+        .attr("width", 15)
+        .attr("height", 15)
+        .attr("fill", "steelblue")
+        .attr("y", 25);
+
+    legend.append("text")
+        .attr("x", 20)
+        .attr("y", 40)
+        .text("Average")
+        .attr("fill", "steelblue");
+}
+
+d3.json("data-1.json").then((dataset) => {
+    map.on("load", () => {
+        map.addSource("municipalities", {
+            type: "vector",
+            url: "mapbox://selindursunn.2lo7wkdx", // Your tileset ID
+        });
+
+        map.addLayer({
+            id: "municipalities-layer",
+            type: "fill",
+            source: "municipalities",
+            "source-layer": "converted_ma_municipalities-bsbiz7", 
+            paint: {
+                "fill-color": "rgba(0, 100, 240, 0.2)",
+                "fill-outline-color": "rgba(0, 0, 0, 0.1)",
+            },
+        }); 
+
+        map.addLayer({
+            id: "municipalities-highlighted",
+            type: "fill",
+            source: "municipalities",
+            "source-layer": "converted_ma_municipalities-bsbiz7",
+            paint: {
+                "fill-color": ["case", ["in", "muni_id", ""], "rgba(0, 100, 240, 0.9)", "orange"],
+                "fill-outline-color": 'blue',
+                "fill-opacity": 0.45,
+            },
+        });
+
+
+        map.on("click", (e) => {
+            const bbox = [
+                [e.point.x - 5, e.point.y - 5], // Bounding box for querying
+                [e.point.x + 5, e.point.y + 5],
+            ];
+
+            const selectedFeatures = map.queryRenderedFeatures(bbox, {
+                layers: ["municipalities-layer"], 
+            });
+
+            if (selectedFeatures.length > 0) {
+                const municipalityName = selectedFeatures[0].properties.municipal;
+                document.getElementById("municipality-name").innerText = `Municipality: ${municipalityName}`;
+                const muniId = selectedFeatures[0].properties.muni_id;
+                map.setFilter("municipalities-highlighted", ["in", "muni_id", muniId]);
+
+                updateChart(dataset, municipalityName); // Update the chart with the new data
+
+            } else {
+                console.warn("No features found at click point:", e.point); // Debug message if no features are found
+            }
+        });
+    });
+});
+
+
+d3.json("schools-1.json").then((dataset) => {
+    map.on("load", () => {
+        map.addSource("niche_grade", {
+            type: "circle",
+            url: "mapbox://selindursunn.24shagbd", // Your tileset ID
+        });
+
+        map.addLayer({
+            id: "schools-high",
+            type: "circle",
+            source: "composite",
+            "source-layer": "schools-bjfhcd", 
+            filter: [
+                "match",
+                ["get", "Niche Grade"],
+                ["A", "B", "A+", "B+"],
+                true,
+                false
+            ],
+            paint: {
+                "circle-color": "hsl(187, 100%, 40%)",
+                "circle-stroke-color": "hsl(0, 0%, 97%)",
+                "circle-blur": 1,
+                "circle-radius": 3
+            }
+        });
+
+        map.addLayer({
+            id: "schools-low",
+            type: "circle",
+            source: "composite",
+            "source-layer": "schools-bjfhcd", 
+            filter: [
+                "match",
+                ["get", "Niche Grade"],
+                ["D+", "C+", "C-"],
+                true,
+                false
+            ],
+            paint: {
+                "circle-color": "hsl(331, 99%, 51%)",
+                "circle-blur": 1,
+                "circle-opacity": 1,
+                
+            }
+        });
+
+    });
+});
+
+
+
+
+</script>
+<script src="scenes1.js"></script>
+</body>
+</html>
