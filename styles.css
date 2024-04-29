@@ -13,8 +13,8 @@ body {
 
 #info-bar {
     position: absolute;
-    top: 30px;
-    right: 30px;
+    top: 20px; /* Slightly reduced for mobile */
+    right: 20px; /* Slightly reduced for mobile */
     height: 90%;
     width: 30%;
     background-color: rgba(1, 0, 21, 0.75);
@@ -64,19 +64,19 @@ img {
 
 
 .glow1 {
-    filter: drop-shadow(0 0 8px rgba(255, 0, 242, 0.9)); /* Adjust the values for the desired glow effect */
+filter: drop-shadow(0 0 8px rgba(255, 0, 242, 0.9));
 }
 
 .glow2 {
-    filter: drop-shadow(0 0 8px rgba(0, 72, 255, 0.9)); /* Adjust the values for the desired glow effect */
+    filter: drop-shadow(0 0 8px rgba(0, 72, 255, 0.9));
 }
 
 #municipality-name {
-    font-size: 20px; /* Increase font size */
-    font-weight: bold; /* Optional: makes the text bold */
-    color: white; /* Optional: changes the text color to white */
-    padding: 0px; /* Optional: adds padding around the text */
-    margin-bottom: 20px; /* Optional: adds space below the text */
+    font-size: 20px; 
+    font-weight: bold;
+    color: white;
+    padding: 0px;
+    margin-bottom: 20px;
 }
 
 #legend {
@@ -84,5 +84,37 @@ img {
     bottom: 45px;
     left: 0;
     padding: 20px;
-    /* Additional styling for the legend box */
+}
+
+/* Media Query for Mobile Devices */
+@media (max-width: 768px) {
+    #info-bar {
+        width: 100%; /* Full width for smaller screens */
+        right: 0; /* Align right side to viewport */
+        top: 0; /* Align top side to viewport */
+        height: auto; /* Adjust height to content */
+        padding: 10px; /* Reduce padding */
+    }
+
+    #chart {
+        height: 200px; /* Reduce chart height for smaller screens */
+    }
+
+    #navigation {
+        width: calc(100% - 20px); /* Adjust width to accommodate reduced padding */
+    }
+
+    #municipality-name {
+        font-size: 16px; /* Smaller font size for smaller screens */
+    }
+
+    button {
+        width: 30px; 
+        height: 30px; /* Reduce button size for smaller screens */
+    }
+
+    #legend {
+        padding: 10px; /* Reduce padding in the legend for smaller screens */
+        font-size: 10px; /* Reduce font size for legend text */
+    }
 }
