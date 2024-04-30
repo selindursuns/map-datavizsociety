@@ -52,9 +52,6 @@ function selectChelsea() {
     map.flyTo({center: [-71.0105, 42.3907], zoom: 13});
 }
 
-
-
-
 function updateScene() {
     const scene = scenes[currentSceneIndex];
     document.getElementById("municipality-name").innerText = scene.content;

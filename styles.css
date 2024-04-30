@@ -18,8 +18,8 @@ body {
 
 #info-bar {
     position: absolute;
-    top: 20px; /* Slightly reduced for mobile */
-    right: 20px; /* Slightly reduced for mobile */
+    top: 20px; 
+    right: 20px; 
     height: 90%;
     width: 30%;
     background-color: rgba(1, 0, 21, 0.75);
@@ -42,12 +42,12 @@ body {
 #navigation {
     position: absolute;
     bottom: 20px;
-    left: 0;  /* Ensure it starts from the left edge of its container */
-    right: 0; /* Ensure it extends to the right edge of its container */
+    left: 0; 
+    right: 0; 
     display: flex;
-    justify-content: space-between; /* This will space out the buttons evenly */
-    padding: 0 20px; /* Add horizontal padding */
-    box-sizing: border-box; /* Ensures padding is included in width calculation */
+    justify-content: space-between; 
+    padding: 0 20px; 
+    box-sizing: border-box; 
 }
 
 button {
@@ -95,46 +95,45 @@ filter: drop-shadow(0 0 8px rgba(255, 0, 242, 0.9));
 }
 
 /* Media Query for Mobile Devices */
-/* Media Query for Mobile Devices */
+
 @media (max-width: 768px) {
     #info-bar {
         opacity: 0.9;
         overflow: visible;
-        width: 100%; /* Full width for smaller screens */
-        top: 0; /* Align top side to viewport */
-        right: 0; /* Align right side to viewport */
-        height: 450px; /* Adjust height to content */
-        padding: 10px; /* Slightly reduced padding */
-        font-size: 10px; /* Smaller font size for better readability */
+        width: 100%; 
+        top: 0; 
+        right: 0; 
+        height: 450px; 
+        padding: 10px; 
+        font-size: 10px; 
     }
 
     #chart {
-        transform: scale(0.6); /* Scales down the chart to 70% of its original size */
-        transform-origin: top center;  /* Sets the point from which the scaling occurs */
-        width: 100%; /* Maintains full width in terms of scaling context */
-        height: 300px; /* Adjusts the height to the new scaled size to prevent extra space */
-        margin-top: 10px; /* Adjust margin to fit mobile layout better */
+        transform: scale(0.6);
+        transform-origin: top center; 
+        width: 100%;
+        height: 300px; 
+        margin-top: 10px; 
     }
 
     #navigation {
-        width: 100%; /* Adjust width to accommodate reduced padding */
-        padding: 0 10px; /* Adjusted padding for mobile */
+        width: 100%; 
+        padding: 0 10px; 
     }
 
     button {
         width: 30px; 
-        height: 30px; /* Reduce button size for smaller screens */
+        height: 30px; 
     }
 
     #municipality-name {
-        font-size: 14px; /* Smaller font size for smaller screens */
-        margin-bottom: 15px; /* Reduced bottom margin */
+        font-size: 14px; 
+        margin-bottom: 15px; 
     }
 
     #legend {
-        padding: 8px; /* Reduce padding in the legend for smaller screens */
-        font-size: 9px; /* Reduce font size for legend text */
+        padding: 8px; 
+        font-size: 9px; 
         bottom: 20px;
-     /* Hide the legend on mobile devices */
     }
 }
