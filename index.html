@@ -32,7 +32,7 @@
         <h4>Legend:</h4>
         <div>
             <svg width="20" height="20" class="glow1">
-                <circle cx="10" cy="10" r="8" style="fill: #FF69B4;"></circle> <!-- Neon pink color -->
+                <circle cx="10" cy="10" r="8" style="fill: #FF69B4;"></circle> 
             </svg>
             <span>Poor Education Quality (Niche Grades) </span>
         </div>
@@ -53,9 +53,6 @@
         </button>
     </div>
 </div>
-
-
-
 
 
 
@@ -103,7 +100,7 @@ function updateChart(dataset, municipalityName) {
 
     const margin = { top: 20, right: 30, bottom: 30, left: 50 };
     const width = 500 - margin.left - margin.right;
-    const height = 350 - margin.top - margin.bottom;
+    const height = 300 - margin.top - margin.bottom;
 
     const svg = d3.select("#chart")
     .append("svg")
